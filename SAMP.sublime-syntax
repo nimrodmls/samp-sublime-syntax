@@ -22,13 +22,22 @@ contexts:
     - include: actions
 
   ic_chat:
+    # Regular Local Chat (NO PROXIMITY!)
     - match: '^{{timestamp}}{{char_name}} says:'
       scope: samp.local_chat.chatlog.samp
       push:
         - meta_scope: samp.local_chat.chatlog.samp
         - match: $\n?
           pop: true
+    # Radio (vicinity)
     - match: '^{{timestamp}}{{char_name}} says \(radio\):'
+      scope: samp.local_chat.chatlog.samp
+      push:
+        - meta_scope: samp.local_chat.chatlog.samp
+        - match: $\n?
+          pop: true
+    # Radio (global)
+    - match: '^{{timestamp}}\[Radio\] {{char_name}}: (.*?)'
       scope: samp.radio.chatlog.samp
       push:
         - meta_scope: samp.radio.chatlog.samp
