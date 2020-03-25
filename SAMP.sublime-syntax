@@ -5,37 +5,83 @@ first_line_match: '{FFFFFF}SA-MP'
 scope: chatlog.samp
 
 variables:
-  timestamp: '(\[\d\d:\d\d:\d\d\]\s)?'
-  char_name: '([^\s]+)\s([^\s]+)'
+  timestamp: '(\[\d\d:\d\d:\d\d\] )?'
+  # The + in the end is to support surnames with multiple uppercase, like McTavish
+  char_name: '([A-Z][a-z]+) ([A-Z][a-z]+)+'
 
 contexts:
 
   main:
     # The main context is the initial starting point of our syntax.
     # Include other contexts from here (or specify them directly).
-    - include: local_chat
+    - include: lottery
+    - include: adverts
+    - include: ic_chat
+    - include: ooc_chat
+    - include: faction
     - include: actions
 
-    # Adverts
-    - include: adverts
-
-    # Default - It's probably a /me, since there's no cleverer way to identify it
-    #- match: '^(.*?)'
-    #  scope: samp.actions.chatlog.samp
-    #  push:
-    #    - meta_scope: samp.actions.chatlog.samp
-    #    - match: $\n?
-    #      pop: true
-
-  local_chat:
-    - match: '^{{timestamp}}(.*?)says:'
+  ic_chat:
+    - match: '^{{timestamp}}{{char_name}} says:'
       scope: samp.local_chat.chatlog.samp
       push:
         - meta_scope: samp.local_chat.chatlog.samp
         - match: $\n?
           pop: true
+    - match: '^{{timestamp}}{{char_name}} says \(radio\):'
+      scope: samp.radio.chatlog.samp
+      push:
+        - meta_scope: samp.radio.chatlog.samp
+        - match: $\n?
+          pop: true
+
+  ooc_chat:
+    # /b
+    - match: '^{{timestamp}}\(\( \[OOC\] {{char_name}}: (.*?) \)\)'
+      scope: samp.ooc.chatlog.samp
+      push:
+        - meta_scope: samp.ooc.chatlog.samp
+        - match: $\n?
+          pop: true
+    # /pm
+    - match: '^{{timestamp}}\[PM (to|from) {{char_name}}, ID \d+\] (.*?)'
+      scope: samp.pm.chatlog.samp
+      push:
+        - meta_scope: samp.pm.chatlog.samp
+        - match: $\n?
+          pop: true
+
+  faction:
+    # Faction chat enabled / disabled
+    - match: '^{{timestamp}}Faction chat has been (disabled|enabled) by {{char_name}}'
+      scope: samp.fchat-on-off.chatlog.samp
+      push:
+        - meta_scope: samp.fchat-on-off.chatlog.samp
+        - match: $\n?
+          pop: true
+    # /f - Faction Chat
+    - match: '^{{timestamp}}\[(.*?) {{char_name}}\] (.*?)'
+      scope: samp.ooc.chatlog.samp
+      push:
+        - meta_scope: samp.ooc.chatlog.samp
+        - match: $\n?
+          pop: true
+    # /duty on/off global faction message
+    - match: '^{{timestamp}}SAFR Message: {{char_name}} is now (ON|OFF) duty.'
+      scope: samp.fduty-on-off.chatlog.samp
+      push:
+        - meta_scope: samp.fduty-on-off.chatlog.samp
+        - match: $\n?
+          pop: true
 
   actions:
+    # /me
+    - match: '^{{timestamp}}{{char_name}} (.*?)'
+      scope: samp.actions.chatlog.samp
+      push:
+        - meta_scope: samp.actions.chatlog.samp
+        - match: $\n?
+          pop: true
     # /my
     - match: '^{{timestamp}}{{char_name}}''s'
       scope: samp.actions.chatlog.samp
@@ -44,7 +90,14 @@ contexts:
         - match: $\n?
           pop: true
     # /do
-    - match: '^{{timestamp}}(.*)\s\(\({{char_name}}\)\)'
+    - match: '^{{timestamp}}(.*) \(\({{char_name}}\)\)'
+      scope: samp.actions.chatlog.samp
+      push:
+        - meta_scope: samp.actions.chatlog.samp
+        - match: $\n?
+          pop: true
+    # Scripted /me
+    - match: '^{{timestamp}}\* {{char_name}} (.*)\*'
       scope: samp.actions.chatlog.samp
       push:
         - meta_scope: samp.actions.chatlog.samp
@@ -53,7 +106,7 @@ contexts:
 
   adverts:
     # Private Adverts
-    - match: '^{{timestamp}}\[Private Advert\](.*) \[Phone: (.*)\]'
+    - match: '^{{timestamp}}\[Private Advert\](.*) \[Phone: \d+\]'
       scope: samp.advert.chatlog.samp
       push:
         - meta_scope: samp.advert.chatlog.samp
@@ -73,3 +126,27 @@ contexts:
         - meta_scope: samp.advert.chatlog.samp
         - match: $\n?
           pop: true
+
+  lottery:
+    # Lottery winner
+    - match: '^{{timestamp}}\[Lottery\]'
+      scope: samp.lottery.chatlog.samp
+      push:
+        - meta_scope: samp.lottery.chatlog.samp
+        - match: $\n?
+          pop: true
+    # Lottery draw annoucement
+    - match: '^{{timestamp}}The Lottery Draw is in (1|5) minute(s)?! Buy tickets from any general store\. Good luck!'
+      scope: samp.lottery.chatlog.samp
+      push:
+        - meta_scope: samp.lottery.chatlog.samp
+        - match: $\n?
+          pop: true
+    # Lottery number draw
+    - match: '^{{timestamp}}\[Red County Lottery\] Draw Number: \d+'
+      scope: samp.lottery.chatlog.samp
+      push:
+        - meta_scope: samp.lottery.chatlog.samp
+        - match: $\n?
+          pop: true
+

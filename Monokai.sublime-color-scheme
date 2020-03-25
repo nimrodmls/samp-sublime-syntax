@@ -10,6 +10,10 @@
 			"foreground": "#d4d4d4",
 		},
 		{
+			"scope": "samp.radio",
+			"foreground": "#a25a16",
+		},
+		{
 			"scope": "samp.actions",
 			"foreground": "#c2a2da",
 			"font_style": "italic",
@@ -19,12 +23,24 @@
 			"foreground": "#437f29",
 		},
 		{
-			"scope": "radio",
-			"foreground": "",
+			"scope": "samp.ooc",
+			"foreground": "#80bcff",
 		},
 		{
-			"scope": "departmental_radio",
-			"foreground": "",
+			"scope": "samp.pm",
+			"foreground": "#ecd344",
+		},
+		{
+			"scope": "samp.fchat-on-off",
+			"foreground": "#e99649",
+		},
+		{
+			"scope": "samp.fduty-on-off",
+			"foreground": "#513ecc",
+		},
+		{
+			"scope": "samp.lottery",
+			"foreground": "#d15c8b",
 		},
 	]
 }
