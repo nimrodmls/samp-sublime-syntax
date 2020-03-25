@@ -1,0 +1,30 @@
+{
+	"variables": {
+		// Define variables here
+	},
+	"globals": {
+	},
+	"rules": [
+		{
+			"scope": "samp.local_chat",
+			"foreground": "#d4d4d4",
+		},
+		{
+			"scope": "samp.actions",
+			"foreground": "#c2a2da",
+			"font_style": "italic",
+		},
+		{
+			"scope": "samp.advert",
+			"foreground": "#437f29",
+		},
+		{
+			"scope": "radio",
+			"foreground": "",
+		},
+		{
+			"scope": "departmental_radio",
+			"foreground": "",
+		},
+	]
+}

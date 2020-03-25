@@ -1,0 +1,75 @@
+%YAML 1.2
+---
+# See http://www.sublimetext.com/docs/3/syntax.html
+first_line_match: '{FFFFFF}SA-MP'
+scope: chatlog.samp
+
+variables:
+  timestamp: '(\[\d\d:\d\d:\d\d\]\s)?'
+  char_name: '([^\s]+)\s([^\s]+)'
+
+contexts:
+
+  main:
+    # The main context is the initial starting point of our syntax.
+    # Include other contexts from here (or specify them directly).
+    - include: local_chat
+    - include: actions
+
+    # Adverts
+    - include: adverts
+
+    # Default - It's probably a /me, since there's no cleverer way to identify it
+    #- match: '^(.*?)'
+    #  scope: samp.actions.chatlog.samp
+    #  push:
+    #    - meta_scope: samp.actions.chatlog.samp
+    #    - match: $\n?
+    #      pop: true
+
+  local_chat:
+    - match: '^{{timestamp}}(.*?)says:'
+      scope: samp.local_chat.chatlog.samp
+      push:
+        - meta_scope: samp.local_chat.chatlog.samp
+        - match: $\n?
+          pop: true
+
+  actions:
+    # /my
+    - match: '^{{timestamp}}{{char_name}}''s'
+      scope: samp.actions.chatlog.samp
+      push:
+        - meta_scope: samp.actions.chatlog.samp
+        - match: $\n?
+          pop: true
+    # /do
+    - match: '^{{timestamp}}(.*)\s\(\({{char_name}}\)\)'
+      scope: samp.actions.chatlog.samp
+      push:
+        - meta_scope: samp.actions.chatlog.samp
+        - match: $\n?
+          pop: true
+
+  adverts:
+    # Private Adverts
+    - match: '^{{timestamp}}\[Private Advert\](.*) \[Phone: (.*)\]'
+      scope: samp.advert.chatlog.samp
+      push:
+        - meta_scope: samp.advert.chatlog.samp
+        - match: $\n?
+          pop: true
+    # Business Adverts
+    - match: '^{{timestamp}}\[Business Advert\]'
+      scope: samp.advert.chatlog.samp
+      push:
+        - meta_scope: samp.advert.chatlog.samp
+        - match: $\n?
+          pop: true
+    # Anonymous Advert
+    - match: '^{{timestamp}}\[Advert\]'
+      scope: samp.advert.chatlog.samp
+      push:
+        - meta_scope: samp.advert.chatlog.samp
+        - match: $\n?
+          pop: true
