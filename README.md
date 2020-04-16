@@ -3,8 +3,7 @@
 The SAMP Chatlog Syntax Highlighting, similar to any Syntax Highlighting for Programming Languages, is simply highlighting text in the SAMP Chatlog according to patterns, based on the SAMP Server's method of presenting the text.
 
 ### Currently Supported Servers
-* Red County Roleplay
- Monokai Theme ONLY
+* Red County Roleplay (Monokai Theme **ONLY**)
 
 ### How to Install
 1. Download Sublime Text 3
