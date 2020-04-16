@@ -20,10 +20,25 @@ contexts:
     - include: ooc_chat
     - include: faction
     - include: actions
+    - include: san
 
   ic_chat:
     # Regular Local Chat (NO PROXIMITY!)
     - match: '^{{timestamp}}{{char_name}} says:'
+      scope: samp.local_chat.chatlog.samp
+      push:
+        - meta_scope: samp.local_chat.chatlog.samp
+        - match: $\n?
+          pop: true
+    # Shout Chat
+    - match: '^{{timestamp}}{{char_name}} shouts:'
+      scope: samp.shout_chat.chatlog.samp
+      push:
+        - meta_scope: samp.shout_chat.chatlog.samp
+        - match: $\n?
+          pop: true
+    # Cellphone (vicinity)
+    - match: '^{{timestamp}}{{char_name}} says \(cellphone\):'
       scope: samp.local_chat.chatlog.samp
       push:
         - meta_scope: samp.local_chat.chatlog.samp
@@ -76,10 +91,24 @@ contexts:
         - match: $\n?
           pop: true
     # /duty on/off global faction message
-    - match: '^{{timestamp}}SAFR Message: {{char_name}} is now (ON|OFF) duty.'
+    - match: '^{{timestamp}}Faction Message: (.*?) {{char_name}} is now (on|off) duty.'
       scope: samp.fduty-on-off.chatlog.samp
       push:
         - meta_scope: samp.fduty-on-off.chatlog.samp
+        - match: $\n?
+          pop: true
+    # Department Radio (vicinity)
+    - match: '^{{timestamp}}{{char_name}} says \(dept\. radio\):'
+      scope: samp.local_chat.chatlog.samp
+      push:
+        - meta_scope: samp.local_chat.chatlog.samp
+        - match: $\n?
+          pop: true
+    # Department Radio
+    - match: '^{{timestamp}}\[(SASP|RCFD|SBI)\] (.*?) {{char_name}} says:'
+      scope: samp.department_radio.chatlog.samp
+      push:
+        - meta_scope: samp.department_radio.chatlog.samp
         - match: $\n?
           pop: true
 
@@ -107,6 +136,13 @@ contexts:
           pop: true
     # Scripted /me
     - match: '^{{timestamp}}\* {{char_name}} (.*)\*'
+      scope: samp.actions.chatlog.samp
+      push:
+        - meta_scope: samp.actions.chatlog.samp
+        - match: $\n?
+          pop: true
+    # Scripted engine on/off
+    - match: '^{{timestamp}}\* The (.*)''s engine is now (on|off). \*'
       scope: samp.actions.chatlog.samp
       push:
         - meta_scope: samp.actions.chatlog.samp
@@ -153,6 +189,22 @@ contexts:
           pop: true
     # Lottery number draw
     - match: '^{{timestamp}}\[Red County Lottery\] Draw Number: \d+'
+      scope: samp.lottery.chatlog.samp
+      push:
+        - meta_scope: samp.lottery.chatlog.samp
+        - match: $\n?
+          pop: true
+
+  san:
+    # SAN News
+    - match: '^{{timestamp}}\[NEWS\] (.*?) {{char_name}}:'
+      scope: samp.lottery.chatlog.samp
+      push:
+        - meta_scope: samp.lottery.chatlog.samp
+        - match: $\n?
+          pop: true
+    # SAN Talk Show
+    - match: '^{{timestamp}}\[TALK SHOW\] (.*?) {{char_name}}:'
       scope: samp.lottery.chatlog.samp
       push:
         - meta_scope: samp.lottery.chatlog.samp

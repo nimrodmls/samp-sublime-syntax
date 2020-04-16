@@ -7,11 +7,15 @@
 	"rules": [
 		{
 			"scope": "samp.local_chat",
-			"foreground": "#d4d4d4",
+			"foreground": "#E6E6E6",
+		},
+		{
+			"scope": "samp.shout_chat",
+			"foreground": "#E67E22",
 		},
 		{
 			"scope": "samp.radio",
-			"foreground": "#a25a16",
+			"foreground": "#967100",
 		},
 		{
 			"scope": "samp.actions",
@@ -20,7 +24,7 @@
 		},
 		{
 			"scope": "samp.advert",
-			"foreground": "#437f29",
+			"foreground": "#437F29",
 		},
 		{
 			"scope": "samp.ooc",
@@ -40,7 +44,11 @@
 		},
 		{
 			"scope": "samp.lottery",
-			"foreground": "#d15c8b",
+			"foreground": "#FD79A8",
+		},
+		{
+			"scope": "samp.department_radio",
+			"foreground": "#E67E22",
 		},
 	]
 }
